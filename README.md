@@ -1,10 +1,13 @@
 # terraform-aws-lambda
 terraform module for provisioning a lambda function 
 
+For most scenarios I would reccomend using the "create_empty_function" argument, rather than using terraform to deploy the function code. Once all infrastructure, functions, and permisisons have been provisioned using terraform, you should use your CI/CD tooling to deploy the function code, typically with and **aws lambda update** command.
+
 
 # Arguments
 Many of the module arguments map directly to the aws_lambda_function resource arguments:
 * function_name 
+* filename
 * description
 * runtime
 * handler
@@ -16,7 +19,8 @@ Many of the module arguments map directly to the aws_lambda_function resource ar
 * reserved_concurrent_executions
 * publish
 
-* **create_empty_function** - (Required) (bool) - Create an empty lambda function, so the actual code can be deployed to it at a later date. 
+Additional arguments are:
+* **create_empty_function** - (Required) (bool) - Create an empty lambda function without the actual code if set to true
 * **policies** - (Required) (list) - The module automatically creates a base IAM role for each lambda, This is a list of statement policies to add to that role. The contents are converted to json using the jsonencode() function.
 * **permissions** - (Optional) (list) - A list of external resources which can invoke the lambda function such as s3 bucket / sns topic. Properties are:
   * statement_id
@@ -28,8 +32,7 @@ Many of the module arguments map directly to the aws_lambda_function resource ar
 # Event trigger arguments
 
 ## SNS topic trigger
-* **sns_topic_subscription** (Optional) (list) - A list of SNS topic ARN's which trigger the lambda function`
-
+* **sns_topic_subscription** (Optional) (map) - The SNS topic ARN which trigger the lambda function`
 
 ## Cron schedule
 * **trigger_schedule** (Optional) (map) - Configures the lambda function to trigger on a schedule. Properties
@@ -45,8 +48,6 @@ Many of the module arguments map directly to the aws_lambda_function resource ar
 In addition to the trigger, make sure you 
  * Add sufficient permissions to the lambda role to interact with s3 (E.g s3:GetObject)
  * Add the source resource has permissions to invoke the lambda (see **permissions** argument)
-
-
 
 * **bucket_trigger** - (Optional) (map) - Configures the lambda function to trigger on s3 bucket ObjectCreated events. Has two properties:
     * enabled (bool) - true | false
