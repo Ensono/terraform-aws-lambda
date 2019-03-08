@@ -33,8 +33,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "lambda_policy" {
-  #count = "${length(var.policies) == 0 ? 0 : 1}"
-  count = "${length(var.policies)}"
+  count = "${length(var.policies) == 0 ? 0 : 1}"
   name  = "${var.function_name}-lambda-policy"
   role  = "${aws_iam_role.lambda.id}"
 
