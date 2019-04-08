@@ -20,4 +20,10 @@ resource "aws_lambda_function" "lambda" {
   }
 
   tags = "${var.tags}"
+
+  lifecycle {
+    ignore_changes = [
+      "filename",
+    ]
+  }
 }
