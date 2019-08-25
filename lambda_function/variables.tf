@@ -55,7 +55,7 @@ variable "trigger_schedule" {
   type = "map"
 
   default = {
-    enabled = 0
+    enabled = false
   }
 }
 
