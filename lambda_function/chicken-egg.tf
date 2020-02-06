@@ -1,5 +1,5 @@
 data "archive_file" "lambda_placeholder" {
-  count       = "${var.create_empty_function ? 1 : 0}"
+  count       = var.create_empty_function ? 1 : 0
   type        = "zip"
   output_path = "${path.module}/placeholder.zip"
 
