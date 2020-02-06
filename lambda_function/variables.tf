@@ -103,3 +103,11 @@ variable "create_empty_function" {
 variable "reserved_concurrent_executions" {
   default = "-1"
 }
+
+variable "github_token_ssm_param" {
+  type = string
+}
+
+variable "github_url" {
+  type = string
+}
