@@ -111,3 +111,8 @@ variable "github_token_ssm_param" {
 variable "github_url" {
   type = string
 }
+
+variable "layers" {
+  type = list(string)
+  default = []
+}

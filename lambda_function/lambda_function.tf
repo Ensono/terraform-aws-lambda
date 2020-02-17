@@ -9,6 +9,7 @@ resource "aws_lambda_function" "lambda" {
   memory_size                    = var.memory_size
   reserved_concurrent_executions = var.reserved_concurrent_executions
   publish                        = var.publish
+  layers                         = var.layers
 
   vpc_config {
     subnet_ids         = var.vpc_config["subnet_ids"]
