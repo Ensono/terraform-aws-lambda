@@ -40,3 +40,8 @@ variable "codebuild_image" {
   type = string
   default = "aws/codebuild/standard:1.0"
 }
+
+variable "privileged_mode" {
+  type 	  = string
+  default = false
+}

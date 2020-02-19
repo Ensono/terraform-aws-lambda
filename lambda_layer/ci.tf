@@ -79,6 +79,7 @@ resource "aws_codebuild_project" "lambda" {
     image                       = var.codebuild_image
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
+    privileged_mode             = var.privileged_mode
   }
 
   source {
