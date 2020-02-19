@@ -45,3 +45,7 @@ variable "privileged_mode" {
   type    = string
   default = false
 }
+
+variable "codebuild_credential_arn" {
+  type = string
+}

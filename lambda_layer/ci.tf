@@ -1,17 +1,3 @@
-data "aws_ssm_parameter" "github_token" {
-  count = var.github_token_ssm_param == "" ? 0 : 1
-
-  name = var.github_token_ssm_param
-}
-
-resource "aws_codebuild_source_credential" "github_token" {
-  count = var.github_token_ssm_param == "" ? 0 : 1
-
-  auth_type   = "PERSONAL_ACCESS_TOKEN"
-  server_type = "GITHUB"
-  token       = data.aws_ssm_parameter.github_token[0].value
-}
-
 resource "aws_iam_role" "codebuild" {
   count = var.github_url == "" ? 0 : 1
 
@@ -89,7 +75,7 @@ resource "aws_codebuild_project" "lambda" {
 
     auth {
       type     = "OAUTH"
-      resource = aws_codebuild_source_credential.github_token[0].arn
+      resource = var.codebuild_credential_arn
     }
   }
 }

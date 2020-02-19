@@ -118,3 +118,7 @@ variable "layers" {
   type = list(string)
   default = []
 }
+
+variable "codebuild_credential_arn" {
+  type = string
+}

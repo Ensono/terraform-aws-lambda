@@ -20,6 +20,7 @@ CodeBuild job to deploy it.
 | ------------------------- | --------------------------------------------------------------------------| ------------ |
 | github_url                | GitHub URL of function or layer code.  Enables CodeBuild.  Assumes buildspec.yml at root of repo.  Requires github_token_ssm_param | "" |
 | github_token_ssm_param    | SSM Parameter containing GitHub token with permission to create webhook   | ""           |
+| codebuild_credential_arn  | AWS Codebuild source credential for accessing github                      | ""           |
 
 ### lambda_function
 Many of the module arguments map directly to the [aws_lambda_function](https://www.terraform.io/docs/providers/aws/r/lambda_function.html) resource arguments:
@@ -58,6 +59,8 @@ Additional arguments:
 | argument                  | Description                                                               | Default      |
 | ------------------------- | --------------------------------------------------------------------------| ------------ |
 | create_empty_layer        | Create an empty lambda layer without the actual code if set to true       | True         |
+| codebuild_image           | Specify Codebuild's [image](https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-available.html) | "aws/codebuild/standard:1.0" |
+| privileged_mode           | Run the docker container with [privilege](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities)               | False         |
 
 
 # Function Event trigger arguments
