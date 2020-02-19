@@ -35,3 +35,8 @@ variable "github_token_ssm_param" {
 variable "github_url" {
   type = string
 }
+
+variable "codebuild_image" {
+  type = string
+  default = "aws/codebuild/standard:1.0"
+}
