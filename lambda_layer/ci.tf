@@ -9,7 +9,7 @@ resource "aws_codebuild_source_credential" "github_token" {
 
   auth_type   = "PERSONAL_ACCESS_TOKEN"
   server_type = "GITHUB"
-  token       = data.aws_ssm_parameter.github_token.value
+  token       = data.aws_ssm_parameter.github_token[0].value
 }
 
 resource "aws_iam_role" "codebuild" {
@@ -89,7 +89,7 @@ resource "aws_codebuild_project" "lambda" {
 
     auth {
       type     = "OAUTH"
-      resource = aws_codebuild_source_credential.github_token.arn
+      resource = aws_codebuild_source_credential.github_token[0].arn
     }
   }
 }
