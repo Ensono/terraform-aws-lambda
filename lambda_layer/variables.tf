@@ -37,11 +37,11 @@ variable "github_url" {
 }
 
 variable "codebuild_image" {
-  type = string
+  type    = string
   default = "aws/codebuild/standard:1.0"
 }
 
 variable "privileged_mode" {
-  type 	  = string
+  type    = string
   default = false
 }

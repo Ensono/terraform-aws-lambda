@@ -89,7 +89,7 @@ resource "aws_codebuild_project" "lambda" {
 
     auth {
       type     = "OAUTH"
-      resource = aws_codebuild_source_credential.github_token[0].token
+      resource = aws_codebuild_source_credential.github_token[0].arn
     }
   }
 }
