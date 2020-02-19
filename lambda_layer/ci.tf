@@ -1,14 +1,20 @@
 data "aws_ssm_parameter" "github_token" {
+  count = var.github_token_ssm_param == "" ? 0 : 1
+
   name = var.github_token_ssm_param
 }
 
 resource "aws_codebuild_source_credential" "github_token" {
+  count = var.github_token_ssm_param == "" ? 0 : 1
+
   auth_type   = "PERSONAL_ACCESS_TOKEN"
   server_type = "GITHUB"
-  token       = data.aws_ssm_parameter.github_token.value
+  token       = data.aws_ssm_parameter.github_token[0].value
 }
 
 resource "aws_iam_role" "codebuild" {
+  count = var.github_url == "" ? 0 : 1
+
   name = "codebuild_${var.layer_name}"
 
   assume_role_policy = <<EOF
@@ -28,7 +34,9 @@ EOF
 }
 
 resource "aws_iam_role_policy" "codebuild" {
-  role = aws_iam_role.codebuild.name
+  count = var.github_url == "" ? 0 : 1
+
+  role = aws_iam_role.codebuild[0].name
 
   policy = <<EOF
 {
@@ -56,9 +64,11 @@ EOF
 }
 
 resource "aws_codebuild_project" "lambda" {
+  count = var.github_url == "" ? 0 : 1
+
   name          = var.layer_name
   build_timeout = "5"
-  service_role  = aws_iam_role.codebuild.arn
+  service_role  = aws_iam_role.codebuild[0].arn
 
   artifacts {
     type = "NO_ARTIFACTS"
@@ -78,13 +88,15 @@ resource "aws_codebuild_project" "lambda" {
 
     auth {
       type     = "OAUTH"
-      resource = aws_codebuild_source_credential.github_token.arn
+      resource = aws_codebuild_source_credential.github_token[0].arn
     }
   }
 }
 
 resource "aws_codebuild_webhook" "lambda" {
-  project_name = aws_codebuild_project.lambda.name
+  count = var.github_url == "" ? 0 : 1
+
+  project_name = aws_codebuild_project.lambda[0].name
 
   filter_group {
     filter {

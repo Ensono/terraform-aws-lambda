@@ -97,7 +97,7 @@ variable "timeout" {
 }
 
 variable "create_empty_function" {
-  default = false
+  default = true
 }
 
 variable "reserved_concurrent_executions" {
@@ -106,10 +106,12 @@ variable "reserved_concurrent_executions" {
 
 variable "github_token_ssm_param" {
   type = string
+  default = ""
 }
 
 variable "github_url" {
   type = string
+  default = ""
 }
 
 variable "layers" {
