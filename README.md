@@ -1,17 +1,35 @@
 # terraform-aws-lambda
-terraform module for provisioning a lambda function 
+This repo contains Terraform modules to manage Lamdbas:
 
-For most scenarios I would reccomend using the "create_empty_function" argument, rather than using terraform to deploy the function code. Once all infrastructure, functions, and permisisons have been provisioned using terraform, you should use your CI/CD tooling to deploy the function code, typically with and **aws lambda update** command.
+| Directory          | Module Description                                 |
+| ------------------ | -------------------------------------------------- |
+| lambda_function/   | Lambda Function and IAM, Trigger, and CI resources |
+| lambda_layer/      | Lambda Layer and CI resources                      |
 
+These modules are primarily designed to deploy Lambda functions and layers with _placeholder_ code and then use an
+external CI/CD process to manage the function and layer code independently of Terraform.
 
-# Arguments
-Many of the module arguments map directly to the aws_lambda_function resource arguments:
+You can optionally provide a GitHub repo containing your function or layer code and the modules will create a simple
+CodeBuild job to deploy it.
+
+## Arguments
+
+### Common
+
+| argument                  | Description                                                               | Default      |
+| ------------------------- | --------------------------------------------------------------------------| ------------ |
+| github_url                | GitHub URL of function or layer code.  Enables CodeBuild.  Assumes buildspec.yml at root of repo.  Requires github_token_ssm_param | "" |
+| codebuild_credential_arn  | AWS Codebuild source credential for accessing github                      | ""           |
+
+### lambda_function
+Many of the module arguments map directly to the [aws_lambda_function](https://www.terraform.io/docs/providers/aws/r/lambda_function.html) resource arguments:
 * function_name 
 * filename
 * description
 * runtime
 * handler
 * timeout
+* layers
 * memory_size
 * environment_variables
 * tags
@@ -19,17 +37,48 @@ Many of the module arguments map directly to the aws_lambda_function resource ar
 * reserved_concurrent_executions
 * publish
 
-Additional arguments are:
-* **create_empty_function** - (Required) (bool) - Create an empty lambda function without the actual code if set to true
-* **policies** - (Required) (list) - The module automatically creates a base IAM role for each lambda, This is a list of statement policies to add to that role. The contents are converted to json using the jsonencode() function.
-* **permissions** - (Optional) (list) - A list of external resources which can invoke the lambda function such as s3 bucket / sns topic. Properties are:
-  * statement_id
-  * action
-  * principal
-  * source_arn
+Additional arguments:
+
+| argument                  | Description                                                               | Default      |
+| ------------------------- | --------------------------------------------------------------------------| ------------ |
+| create_empty_function     | Create an empty lambda function without the actual code if set to true    | True         |
+| policies                  | List of statement policies to add to module-manageg Lambda IAM role role. | []           |
+| permissions               | map of external resources which can invoke the lambda function            | { enabled = false } |
+
+### lambda_layer
+Many of the module arguments map directly to the [aws_lambda_layer_version](https://www.terraform.io/docs/providers/aws/r/lambda_layer_version.html) resource arguments:
+* layer_name
+* filename
+* description
+* runtime
 
 
-# Event trigger arguments
+Additional arguments:
+
+| argument                  | Description                                                               | Default      |
+| ------------------------- | --------------------------------------------------------------------------| ------------ |
+| create_empty_layer        | Create an empty lambda layer without the actual code if set to true       | True         |
+| codebuild_image           | Specify Codebuild's [image](https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-available.html) | "aws/codebuild/standard:1.0" |
+| privileged_mode           | Run the docker container with [privilege](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities)               | False         |
+
+# CodeBuild
+
+This module will optionally create a CodeBuild job and trigger webhook to deploy your Lambda function or layer from a
+GitHub repository.
+
+To enable creation of a CodeBuild job you must:
+    * Supply the github_url module argument
+    * Import a GitHub credential using [awscli](https://docs.aws.amazon.com/cli/latest/reference/codebuild/import-source-credentials.html)
+    or [Terraform](https://www.terraform.io/docs/providers/aws/r/codebuild_source_credential.html).
+    This credential must have admin access to your repository to create the webhook.
+
+---
+  > **_NOTE:_**  At the time of this writing, [each AWS account is limited to one GitHub CodeBuild credential](https://forums.aws.amazon.com/thread.jspa?threadID=308688&tstart=0).
+  >
+  > The module will try to construct the ARN of the CodeBuild credential as arn:aws:codebuild:<REGION_ID>:<ACCOUNT_ID>:token/github.  You can optionally override this using the module's codebuild_credential_arn argument.
+---
+
+# Function Event trigger arguments
 
 ## SNS topic trigger
 * **sns_topic_subscription** (Optional) (map) - The SNS topic ARN which trigger the lambda function`
@@ -66,3 +115,6 @@ Ensure you add the following permissions to the lambda role
   * event_source_arn (string) - arn of the event source
   * batch_size (int) - The largest number of records that Lambda will retrieve from your event source at the time of invocation
 
+
+
+[]: https://www.terraform.io/docs/providers/aws/r/lambda_function.html
