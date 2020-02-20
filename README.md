@@ -19,7 +19,6 @@ CodeBuild job to deploy it.
 | argument                  | Description                                                               | Default      |
 | ------------------------- | --------------------------------------------------------------------------| ------------ |
 | github_url                | GitHub URL of function or layer code.  Enables CodeBuild.  Assumes buildspec.yml at root of repo.  Requires github_token_ssm_param | "" |
-| github_token_ssm_param    | SSM Parameter containing GitHub token with permission to create webhook   | ""           |
 | codebuild_credential_arn  | AWS Codebuild source credential for accessing github                      | ""           |
 
 ### lambda_function
@@ -44,7 +43,7 @@ Additional arguments:
 | ------------------------- | --------------------------------------------------------------------------| ------------ |
 | create_empty_function     | Create an empty lambda function without the actual code if set to true    | True         |
 | policies                  | List of statement policies to add to module-manageg Lambda IAM role role. | []           |
-| permissions               | list of external resources which can invoke the lambda function           | {}           |
+| permissions               | map of external resources which can invoke the lambda function            | { enabled = false } |
 
 ### lambda_layer
 Many of the module arguments map directly to the [aws_lambda_layer_version](https://www.terraform.io/docs/providers/aws/r/lambda_layer_version.html) resource arguments:
@@ -62,6 +61,22 @@ Additional arguments:
 | codebuild_image           | Specify Codebuild's [image](https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-available.html) | "aws/codebuild/standard:1.0" |
 | privileged_mode           | Run the docker container with [privilege](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities)               | False         |
 
+# CodeBuild
+
+This module will optionally create a CodeBuild job and trigger webhook to deploy your Lambda function or layer from a
+GitHub repository.
+
+To enable creation of a CodeBuild job you must:
+    * Supply the github_url module argument
+    * Import a GitHub credential using [awscli](https://docs.aws.amazon.com/cli/latest/reference/codebuild/import-source-credentials.html)
+    or [Terraform](https://www.terraform.io/docs/providers/aws/r/codebuild_source_credential.html).
+    This credential must have admin access to your repository to create the webhook.
+
+---
+  > **_NOTE:_**  At the time of this writing, [each AWS account is limited to one GitHub CodeBuild credential](https://forums.aws.amazon.com/thread.jspa?threadID=308688&tstart=0).
+  >
+  > The module will try to construct the ARN of the CodeBuild credential as arn:aws:codebuild:<REGION_ID>:<ACCOUNT_ID>:token/github.  You can optionally override this using the module's codebuild_credential_arn argument.
+---
 
 # Function Event trigger arguments
 

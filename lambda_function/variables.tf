@@ -104,11 +104,6 @@ variable "reserved_concurrent_executions" {
   default = "-1"
 }
 
-variable "github_token_ssm_param" {
-  type = string
-  default = ""
-}
-
 variable "github_url" {
   type = string
   default = ""
@@ -120,5 +115,6 @@ variable "layers" {
 }
 
 variable "codebuild_credential_arn" {
-  type = string
+  type    = string
+  default = ""
 }

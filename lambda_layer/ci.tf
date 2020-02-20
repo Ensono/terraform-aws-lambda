@@ -1,3 +1,6 @@
+data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
+
 resource "aws_iam_role" "codebuild" {
   count = var.github_url == "" ? 0 : 1
 
@@ -75,7 +78,7 @@ resource "aws_codebuild_project" "lambda" {
 
     auth {
       type     = "OAUTH"
-      resource = var.codebuild_credential_arn
+      resource = var.codebuild_credential_arn == "" ? "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:token/github" : var.codebuild_credential_arn
     }
   }
 }
