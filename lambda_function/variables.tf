@@ -105,16 +105,21 @@ variable "reserved_concurrent_executions" {
 }
 
 variable "github_url" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "layers" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
 variable "codebuild_credential_arn" {
   type    = string
   default = ""
+}
+
+variable "build_timeout" {
+  type    = string
+  default = "60"
 }

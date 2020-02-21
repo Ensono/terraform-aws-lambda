@@ -20,6 +20,7 @@ CodeBuild job to deploy it.
 | ------------------------- | --------------------------------------------------------------------------| ------------ |
 | github_url                | GitHub URL of function or layer code.  Enables CodeBuild.  Assumes buildspec.yml at root of repo.  Requires github_token_ssm_param | "" |
 | codebuild_credential_arn  | AWS Codebuild source credential for accessing github                      | ""           |
+| build_timeout             | Codebuild Timeout in minutes.                                             | "60"           |
 
 ### lambda_function
 Many of the module arguments map directly to the [aws_lambda_function](https://www.terraform.io/docs/providers/aws/r/lambda_function.html) resource arguments:
