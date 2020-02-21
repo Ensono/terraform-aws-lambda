@@ -56,7 +56,7 @@ resource "aws_codebuild_project" "lambda" {
   count = var.github_url == "" ? 0 : 1
 
   name          = var.function_name
-  build_timeout = "5"
+  build_timeout = var.build_timeout
   service_role  = aws_iam_role.codebuild[0].arn
 
   artifacts {

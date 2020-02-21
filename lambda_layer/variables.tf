@@ -46,3 +46,8 @@ variable "codebuild_credential_arn" {
   type    = string
   default = ""
 }
+
+variable "build_timeout" {
+  type    = string
+  default = "60"
+}
