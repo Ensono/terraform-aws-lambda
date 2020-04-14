@@ -99,9 +99,11 @@ In addition to the trigger, make sure you
  * Add sufficient permissions to the lambda role to interact with s3 (E.g s3:GetObject)
  * Add the source resource has permissions to invoke the lambda (see **permissions** argument)
 
-* **bucket_trigger** - (Optional) (map) - Configures the lambda function to trigger on s3 bucket ObjectCreated events. Has two properties:
+* **bucket_trigger** - (Optional) (map) - Configures the lambda function to trigger on s3 bucket ObjectCreated events:
     * enabled (bool) - true | false
     * bucket (string) - The bucket name only (Not the full bucket arn!)
+    * filter_prefix (string) - Only trigger for objects with this prefix (must be null if no filter)
+    * filter_suffix (string) - Only trigger for objects with this suffix (must be null if no filter)
 
 
 ## SQS trigger
