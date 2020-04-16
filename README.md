@@ -102,8 +102,8 @@ In addition to the trigger, make sure you
 * **bucket_trigger** - (Optional) (map) - Configures the lambda function to trigger on s3 bucket ObjectCreated events:
     * enabled (bool) - true | false
     * bucket (string) - The bucket name only (Not the full bucket arn!)
-    * filter_prefix (string) - Only trigger for objects with this prefix (must be null if no filter)
-    * filter_suffix (string) - Only trigger for objects with this suffix (must be null if no filter)
+    * filter_prefix (string) - Only trigger for objects with this prefix (must be "" if no filter)
+    * filter_suffix (string) - Only trigger for objects with this suffix (must be "" if no filter)
 
 
 ## SQS trigger
