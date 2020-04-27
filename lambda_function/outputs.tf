@@ -5,3 +5,7 @@ output "arn" {
 output "role" {
   value = aws_iam_role.lambda
 }
+
+output "function_name" {
+  value = aws_lambda_function.function_name
+}
