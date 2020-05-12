@@ -7,7 +7,8 @@ This repo contains Terraform modules to manage Lamdbas:
 | lambda_layer/      | Lambda Layer and CI resources                      |
 
 These modules are primarily designed to deploy Lambda functions and layers with _placeholder_ code and then use an
-external CI/CD process to manage the function and layer code independently of Terraform.
+external CI/CD process to manage the function and layer code independently of Terraform. It is also possible to point
+the CI/CD process to a specific feature branch using the git_branch variable. By default, this value is set to *master*.
 
 You can optionally provide a GitHub repo containing your function or layer code and the modules will create a simple
 CodeBuild job to deploy it.
@@ -25,6 +26,7 @@ CodeBuild job to deploy it.
 ### lambda_function
 Many of the module arguments map directly to the [aws_lambda_function](https://www.terraform.io/docs/providers/aws/r/lambda_function.html) resource arguments:
 * function_name 
+* git_branch
 * filename
 * description
 * runtime

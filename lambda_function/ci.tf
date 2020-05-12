@@ -95,7 +95,7 @@ resource "aws_codebuild_webhook" "lambda" {
 
     filter {
       type    = "HEAD_REF"
-      pattern = "master"
+      pattern = var.git_branch
     }
   }
 }

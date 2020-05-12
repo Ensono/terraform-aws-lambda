@@ -123,3 +123,8 @@ variable "build_timeout" {
   type    = string
   default = "60"
 }
+
+variable "git_branch" {
+  type = string
+  default = "master"
+}
