@@ -47,7 +47,8 @@ resource "aws_iam_role_policy" "codebuild" {
       "Resource": "${aws_lambda_function.lambda.arn}",
       "Action": [
         "lambda:UpdateFunctionCode",
-        "lambda:ListVersionsByFunction"
+        "lambda:ListVersionsByFunction",
+        "lambda:UpdateAlias"
       ]
     }
   ]
