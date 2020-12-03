@@ -34,7 +34,7 @@ variable "github_url" {
 
 variable "codebuild_image" {
   type    = string
-  default = "aws/codebuild/standard:1.0"
+  default = "aws/codebuild/standard:4.0"
 }
 
 variable "privileged_mode" {
