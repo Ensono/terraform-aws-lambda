@@ -13,3 +13,7 @@ output "function_name" {
 output "invoke_arn" {
   value = aws_lambda_function.lambda.invoke_arn
 }
+
+output "codebuild_role" {
+  value = aws_iam_role.codebuild
+}
