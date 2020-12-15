@@ -29,7 +29,8 @@ variable "reserved_concurrent_executions" {
 }
 
 variable "github_url" {
-  type = string
+  type    = string
+  default = ""
 }
 
 variable "codebuild_image" {
@@ -53,6 +54,6 @@ variable "build_timeout" {
 }
 
 variable "git_branch" {
-  type = string
+  type    = string
   default = "master"
 }
