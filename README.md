@@ -63,6 +63,7 @@ Additional arguments:
 | create_empty_layer        | Create an empty lambda layer without the actual code if set to true       | True         |
 | codebuild_image           | Specify Codebuild's [image](https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-available.html) | "aws/codebuild/standard:1.0" |
 | privileged_mode           | Run the docker container with [privilege](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities)               | False         |
+| codebuild_can_run_integration_test | Specifies whether or not codebuild job can invoke lambda function and is passed through to the job as an env variable (run_integration_test) | False
 
 # CodeBuild
 
@@ -123,3 +124,16 @@ Ensure you add the following permissions to the lambda role
 
 
 []: https://www.terraform.io/docs/providers/aws/r/lambda_function.html
+
+## Codebuild and Integration Testing
+
+If invoking this module within an environment where Integration testing makes sense as part of CI, by setting the "codebuild_can_run_integration_test" argument to true
+ * The codebuild job that accompanies lambda ci is now able to invoke the lambda function
+ * The codebuild job will know if it's appropriate to perform integration testing in the environment it's running in according to env variable "run_integration_test"
+
+For an example implementation of a lambda-codebuild job setup to conditionally run integration tests see this buildspec.yml excerpt:
+
+    if [ "$run_integration_test" = true ]; then
+          aws lambda wait function-updated --function-name $lambda_name;
+          aws lambda invoke --function-name $lambda_name --payload file://tests/testEvent.json response.json | jq -e 'has("FunctionError")|not';
+    fi

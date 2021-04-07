@@ -24,36 +24,38 @@ EOF
 
 resource "aws_iam_role_policy" "codebuild" {
   count = var.github_url == "" ? 0 : 1
-
   role = aws_iam_role.codebuild[0].name
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Resource": [
-        "*"
-      ],
-      "Action": [
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Resource": "${aws_lambda_function.lambda.arn}",
-      "Action": [
-        "lambda:UpdateFunctionCode",
-        "lambda:ListVersionsByFunction",
-        "lambda:UpdateAlias"
-      ]
-    }
-  ]
+  policy = data.aws_iam_policy_document.policy.json
 }
-EOF
+
+data "aws_iam_policy_document" "policy" {
+  statement {
+    effect = "Allow"
+    resources = ["*"]
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"]
+  }
+  statement {
+    effect = "Allow"
+    resources = [
+      aws_lambda_function.lambda.arn]
+    actions = [
+      "lambda:UpdateFunctionCode",
+      "lambda:ListVersionsByFunction",
+      "lambda:UpdateAlias"
+    ]
+  }
+  dynamic "statement" {
+    for_each = var.codebuild_can_run_integration_test ? ["allow_invoke"] : []
+    content {
+      effect = "Allow"
+      resources = [aws_lambda_function.lambda.arn]
+      actions = ["lambda:InvokeFunction", "lambda:GetFunctionConfiguration"]
+    }
+  }
+
 }
 
 resource "aws_codebuild_project" "lambda" {
@@ -72,6 +74,10 @@ resource "aws_codebuild_project" "lambda" {
     image                       = "aws/codebuild/standard:4.0"
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
+    environment_variable {
+      name = "run_integration_test"
+      value = var.codebuild_can_run_integration_test
+    }
   }
 
   source {
