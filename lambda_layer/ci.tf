@@ -46,6 +46,15 @@ resource "aws_iam_role_policy" "codebuild" {
       "Effect": "Allow",
       "Resource": "${aws_lambda_layer_version.layer.layer_arn}",
       "Action": "lambda:PublishLayerVersion"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ssm:GetParameter*"
+      ],
+      "Resource": [
+          "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/service/shared/*"
+      ]
     }
   ]
 }
