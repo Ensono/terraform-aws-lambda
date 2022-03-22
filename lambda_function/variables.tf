@@ -1,32 +1,32 @@
 variable "aws_region" {
-  default     = "eu-west-1"
+  default     = "us-east-1"
   description = "The region of AWS"
 }
 
 variable "vpc_config" {
-  type = "map"
+  type = map(list(string))
 
   default = {
-    subnet_ids         = ""
-    security_group_ids = ""
+    subnet_ids         = []
+    security_group_ids = []
   }
 }
 
 variable "tags" {
-  type    = "map"
+  type    = map(string)
   default = {}
 }
 
 variable "function_name" {
-  type = "string"
+  type = string
 }
 
 variable "description" {
-  type = "string"
+  type = string
 }
 
 variable "runtime" {
-  type = "string"
+  type = string
 }
 
 variable "publish" {
@@ -34,25 +34,25 @@ variable "publish" {
 }
 
 variable "handler" {
-  type = "string"
+  type = string
 }
 
 variable "filename" {
-  type    = "string"
+  type    = string
   default = ""
 }
 
 variable "environment_variables" {
-  type = "map"
+  type = map(string)
 }
 
 variable "source_mappings" {
-  type    = "list"
+  type    = list(any)
   default = []
 }
 
 variable "trigger_schedule" {
-  type = "map"
+  type = map(any)
 
   default = {
     enabled = 0
@@ -60,7 +60,7 @@ variable "trigger_schedule" {
 }
 
 variable "sns_topic_subscription" {
-  type = "map"
+  type = map(any)
 
   default = {
     enabled = false
@@ -68,12 +68,12 @@ variable "sns_topic_subscription" {
 }
 
 variable "policies" {
-  type    = "list"
+  type    = list(any)
   default = []
 }
 
 variable "permissions" {
-  type = "map"
+  type = map(any)
 
   default = {
     enabled = false
@@ -81,7 +81,7 @@ variable "permissions" {
 }
 
 variable "bucket_trigger" {
-  type = "map"
+  type = map(any)
 
   default = {
     enabled = false
@@ -89,17 +89,42 @@ variable "bucket_trigger" {
 }
 
 variable "memory_size" {
-  type = "string"
+  type = string
 }
 
 variable "timeout" {
-  type = "string"
+  type = string
 }
 
 variable "create_empty_function" {
-  default = false
+  default = true
 }
 
 variable "reserved_concurrent_executions" {
   default = "-1"
+}
+
+variable "github_url" {
+  type    = string
+  default = ""
+}
+
+variable "layers" {
+  type    = list(string)
+  default = []
+}
+
+variable "codebuild_credential_arn" {
+  type    = string
+  default = ""
+}
+
+variable "build_timeout" {
+  type    = string
+  default = "60"
+}
+
+variable "git_branch" {
+  type = string
+  default = "master"
 }
