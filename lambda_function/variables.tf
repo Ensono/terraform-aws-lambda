@@ -59,6 +59,12 @@ variable "trigger_schedule" {
   }
 }
 
+variable "trigger_input_parameters_json" {
+  default = <<JSON
+      {}
+    JSON
+}
+
 variable "sns_topic_subscription" {
   type = map(any)
 

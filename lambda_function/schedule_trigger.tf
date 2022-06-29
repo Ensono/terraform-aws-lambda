@@ -12,6 +12,7 @@ resource "aws_cloudwatch_event_target" "lambda" {
   rule      = aws_cloudwatch_event_rule.lambda[count.index].name
   target_id = "${var.function_name}-target"
   arn       = aws_lambda_function.lambda.arn
+  input     = var.trigger_input_parameters_json
 }
 
 resource "aws_lambda_permission" "lambda_cloudwatch" {
