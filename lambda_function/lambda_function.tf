@@ -11,6 +11,9 @@ resource "aws_lambda_function" "lambda" {
   publish                        = var.publish
   layers                         = var.layers
 
+  ephemeral_storage {
+    size = var.ephemeral_storage
+  }
   vpc_config {
     subnet_ids         = var.vpc_config["subnet_ids"]
     security_group_ids = var.vpc_config["security_group_ids"]

@@ -139,3 +139,8 @@ variable "git_branch" {
   type = string
   default = "master"
 }
+
+variable "ephemeral_storage" {
+  type = number
+  default = 512
+}
