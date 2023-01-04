@@ -78,6 +78,10 @@ resource "aws_codebuild_project" "lambda" {
       name = "run_integration_test"
       value = var.codebuild_can_run_integration_test
     }
+    environment_variable {
+      name  = "lambda_function_name"
+      value = var.function_name
+    }
   }
 
   source {
