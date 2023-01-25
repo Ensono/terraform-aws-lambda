@@ -37,6 +37,8 @@ module "lambda_s3_trigger" {
   bucket_trigger = {
     enabled = true
     bucket  = "${aws_s3_bucket.example.bucket}"
+    filter_prefix  = "images/"
+    filter_suffix  = ""
   }
 
   permissions = {
